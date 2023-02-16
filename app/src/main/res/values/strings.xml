@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">RestaurantWaiterApp</string>
+    <string name="title_main">События</string>
+    <string name="event_call">Вызов.</string>
+    <string name="event_dish">Блюдо \"%s\" готово.</string>
+    <string name="event_table">Стол №%d</string>
 </resources>

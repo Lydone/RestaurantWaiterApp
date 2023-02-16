@@ -1,6 +1,10 @@
 plugins {
     id(Plugin.Android.APPLICATION)
+    id(Plugin.DAGGER_HILT)
     kotlin(Plugin.Kotlin.ANDROID)
+    kotlin(Plugin.Kotlin.KAPT)
+    id(Plugin.KSP)
+    id(Plugin.GOOGLE_SERVICES)
 }
 
 android {
@@ -54,10 +58,24 @@ dependencies {
     implementation(Dependency.Compose.UI)
     implementation(Dependency.Compose.PREVIEW)
     implementation(Dependency.Compose.MATERIAL3)
-//    testImplementation 'junit:junit:4.13.2'
+    implementation(Dependency.NAVIGATION_COMPOSE)
+    implementation(Dependency.Dagger.HILT_ANDROID)
+    implementation(Dependency.Dagger.HILT_NAVIGATION_COMPOSE)
+    implementation(Dependency.Room.RUNTIME)
+    implementation(Dependency.Room.KTX)
+    annotationProcessor(Dependency.Room.COMPILER)
+    ksp(Dependency.Room.COMPILER)
+    kapt(Dependency.Dagger.HILT_ANDROID_COMPILER)
+    implementation(platform(Dependency.Firebase.BOM))
+    implementation(Dependency.Firebase.CLOUD_MESSAGING)
+    testImplementation("junit:junit:4.13.2")
 //    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
 //    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 //    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-//    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+    debugImplementation("androidx.compose.ui:ui-tooling:${Version.Compose.UI}")
 //    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+}
+
+kapt {
+    correctErrorTypes = true
 }

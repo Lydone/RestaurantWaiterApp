@@ -9,5 +9,10 @@ object Plugin {
     object Kotlin {
 
         const val ANDROID = "android"
+        const val KAPT = "kapt"
     }
+
+    const val DAGGER_HILT = "com.google.dagger.hilt.android"
+    const val KSP = "com.google.devtools.ksp"
+    const val GOOGLE_SERVICES = "com.google.gms.google-services"
 }
