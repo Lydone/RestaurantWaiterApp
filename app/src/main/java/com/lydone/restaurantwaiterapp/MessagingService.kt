@@ -11,6 +11,10 @@ class MessagingService : FirebaseMessagingService() {
 
     private var tts: TextToSpeech? = null
 
+    override fun onNewToken(token: String) {
+        Log.d("Token", token)
+    }
+
 
     override fun onMessageReceived(message: RemoteMessage) {
         Log.d("Service", "On message received")
