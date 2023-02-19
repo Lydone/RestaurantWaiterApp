@@ -10,6 +10,7 @@ object Plugin {
 
         const val ANDROID = "android"
         const val KAPT = "kapt"
+        const val SERIALIZATION = "plugin.serialization"
     }
 
     const val DAGGER_HILT = "com.google.dagger.hilt.android"

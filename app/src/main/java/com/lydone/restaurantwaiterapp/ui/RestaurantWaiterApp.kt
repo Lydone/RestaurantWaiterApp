@@ -34,9 +34,8 @@ fun RestaurantWaiterApp() {
         },
         floatingActionButton = {
             if (currentRoute == MAIN_ROUTE) {
-                val viewModel = hiltViewModel<MainViewModel>(navController.currentBackStackEntry!!)
                 FloatingActionButton(
-                    onClick = { viewModel.addEvent() },
+                    onClick = { TODO() },
                 ) {
                     Icon(painterResource(R.drawable.baseline_edit_24), contentDescription = null)
                 }

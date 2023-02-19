@@ -1,11 +1,11 @@
-package com.lydone.restaurantwaiterapp.data.event
+package com.lydone.restaurantwaiterapp.data.db.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity()
+@Entity
 data class Event(
+    @PrimaryKey val id: Int,
     val table: Int,
     val dish: String?,
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
 )

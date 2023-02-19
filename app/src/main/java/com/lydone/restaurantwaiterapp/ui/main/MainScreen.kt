@@ -4,6 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -15,36 +19,56 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.lydone.restaurantwaiterapp.R
-import com.lydone.restaurantwaiterapp.data.event.Event
+import com.lydone.restaurantwaiterapp.data.model.Event
 import com.lydone.restaurantwaiterapp.ui.theme.RestaurantWaiterAppTheme
 
 @Composable
 fun MainRoute(viewModel: MainViewModel = hiltViewModel()) {
-    MainScreen(viewModel.state.collectAsState().value, viewModel::onDismiss)
+    MainScreen(viewModel.uiState.collectAsState().value, viewModel::onDismiss, viewModel::getEvents)
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun MainScreen(state: List<Event>, onDismiss: (Event) -> Unit) {
-    Column {
-        // TODO table picker
-        Text(
-            "TODO: Подписка на столы: 1, 2, 3, 4",
-            Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.primaryContainer,
-                    MaterialTheme.shapes.small
-                )
-                .padding(16.dp)
+private fun MainScreen(
+    state: MainViewModel.State,
+    onDismiss: (Event) -> Unit,
+    onRefresh: () -> Unit
+) {
+    val pullRefreshState = rememberPullRefreshState(refreshing = state.loading, onRefresh = onRefresh)
+    Box {
+        Column {
+            // TODO table picker
+            Text(
+                "TODO: Подписка на столы: 1, 2, 3, 4",
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        MaterialTheme.shapes.small
+                    )
+                    .padding(16.dp)
 
-        )
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(bottom = 100.dp)
-        ) {
-            state.forEach { item(key = it.id) { EventCard(it, onDismiss = { onDismiss(it) }) } }
+            )
+            LazyColumn(
+                modifier = Modifier.pullRefresh(pullRefreshState).fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(bottom = 100.dp),
+            ) {
+                state.events.forEach {
+                    item(key = it.id) {
+                        EventCard(
+                            it,
+                            onDismiss = { onDismiss(it) })
+                    }
+                }
+            }
         }
+        PullRefreshIndicator(
+            refreshing = state.loading,
+            state = pullRefreshState,
+            Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 
@@ -95,13 +119,5 @@ private fun EventCard(event: Event, onDismiss: () -> Unit) {
             },
             directions = setOf(DismissDirection.EndToStart)
         )
-    }
-}
-
-@Preview
-@Composable
-private fun MainScreen() {
-    RestaurantWaiterAppTheme {
-        MainScreen(listOf(Event(4, "Цезарь")), {})
     }
 }

@@ -3,6 +3,7 @@ plugins {
     id(Plugin.DAGGER_HILT)
     kotlin(Plugin.Kotlin.ANDROID)
     kotlin(Plugin.Kotlin.KAPT)
+    kotlin(Plugin.Kotlin.SERIALIZATION)
     id(Plugin.KSP)
     id(Plugin.GOOGLE_SERVICES)
 }
@@ -52,6 +53,7 @@ android {
 
 dependencies {
 
+    implementation(Dependency.COIL)
     implementation(Dependency.CORE_KTX)
 //    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     implementation(Dependency.Compose.ACTIVITY)
@@ -68,6 +70,11 @@ dependencies {
     kapt(Dependency.Dagger.HILT_ANDROID_COMPILER)
     implementation(platform(Dependency.Firebase.BOM))
     implementation(Dependency.Firebase.CLOUD_MESSAGING)
+    implementation(Dependency.Retrofit.RETROFIT)
+    implementation(Dependency.Retrofit.CONVERTER)
+    implementation(Dependency.SERIALIZATION)
+    // TODO remove asap
+    implementation("androidx.compose.material:material:1.3.1")
     testImplementation("junit:junit:4.13.2")
 //    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
 //    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
