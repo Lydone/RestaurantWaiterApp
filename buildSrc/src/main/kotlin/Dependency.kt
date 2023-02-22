@@ -7,6 +7,8 @@ object Dependency {
 
     const val SERIALIZATION = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
 
+    const val DATASTORE_PREFERENCES = "androidx.datastore:datastore-preferences:1.0.0"
+
 
     object Compose {
 

@@ -24,16 +24,11 @@ class MessagingService : FirebaseMessagingService() {
             getString(R.string.event_dish, dish)
         } else {
             getString(R.string.event_call)
-        } + getString(R.string.event_table, table)
+        } + getString(R.string.table, table)
         tts = TextToSpeech(this) {
             tts!!.speak(text, TextToSpeech.QUEUE_ADD, null, null)
         }.apply {
             language = Locale("ru")
         }
-    }
-
-    override fun onDestroy() {
-        Log.d("Service", "onDestroy")
-        super.onDestroy()
     }
 }

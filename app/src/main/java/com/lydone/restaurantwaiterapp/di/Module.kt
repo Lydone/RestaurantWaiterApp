@@ -21,10 +21,14 @@ object Module {
     @Singleton
     @Provides
     fun provideDb(@ApplicationContext context: Context) =
-        Room.databaseBuilder(context, Database::class.java, "db").fallbackToDestructiveMigration().build()
+        Room.databaseBuilder(context, Database::class.java, "db").fallbackToDestructiveMigration()
+            .build()
 
     @Provides
     fun provideEventDao(database: Database) = database.eventDao()
+
+    @Provides
+    fun provideTableDao(database: Database) = database.tableDao()
 
     @Provides
     fun provideApiService() = Retrofit.Builder()

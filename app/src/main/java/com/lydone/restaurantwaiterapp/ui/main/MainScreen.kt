@@ -1,6 +1,7 @@
 package com.lydone.restaurantwaiterapp.ui.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -15,16 +16,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.lydone.restaurantwaiterapp.R
 import com.lydone.restaurantwaiterapp.data.model.Event
-import com.lydone.restaurantwaiterapp.ui.theme.RestaurantWaiterAppTheme
 
 @Composable
-fun MainRoute(viewModel: MainViewModel = hiltViewModel()) {
-    MainScreen(viewModel.uiState.collectAsState().value, viewModel::onDismiss, viewModel::getEvents)
+fun MainRoute(navigateToTablePicker: () -> Unit, viewModel: MainViewModel = hiltViewModel()) {
+    MainScreen(
+        viewModel.uiState.collectAsState().value,
+        viewModel::onDismiss,
+        viewModel::loadEvents,
+        navigateToTablePicker
+    )
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -32,35 +36,23 @@ fun MainRoute(viewModel: MainViewModel = hiltViewModel()) {
 private fun MainScreen(
     state: MainViewModel.State,
     onDismiss: (Event) -> Unit,
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
+    onTablePickerClick: () -> Unit,
 ) {
-    val pullRefreshState = rememberPullRefreshState(refreshing = state.loading, onRefresh = onRefresh)
+    val pullRefreshState =
+        rememberPullRefreshState(refreshing = state.loading, onRefresh = onRefresh)
     Box {
         Column {
-            // TODO table picker
-            Text(
-                "TODO: Подписка на столы: 1, 2, 3, 4",
-                Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        MaterialTheme.shapes.small
-                    )
-                    .padding(16.dp)
-
-            )
+            TablePicker(onTablePickerClick, state)
             LazyColumn(
-                modifier = Modifier.pullRefresh(pullRefreshState).fillMaxSize(),
+                modifier = Modifier
+                    .pullRefresh(pullRefreshState)
+                    .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(bottom = 100.dp),
             ) {
                 state.events.forEach {
-                    item(key = it.id) {
-                        EventCard(
-                            it,
-                            onDismiss = { onDismiss(it) })
-                    }
+                    item(key = it.id) { EventCard(it, onDismiss = { onDismiss(it) }) }
                 }
             }
         }
@@ -68,6 +60,36 @@ private fun MainScreen(
             refreshing = state.loading,
             state = pullRefreshState,
             Modifier.align(Alignment.TopCenter)
+        )
+    }
+}
+
+@Composable
+private fun TablePicker(
+    onClick: () -> Unit,
+    state: MainViewModel.State
+) = Card(
+    Modifier
+        .padding(16.dp)
+        .clickable(onClick = onClick),
+    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+) {
+    Row(Modifier.padding(16.dp)) {
+        Text(
+            if (state.tables.isEmpty()) {
+                stringResource(R.string.choose_tables)
+            } else {
+                stringResource(
+                    R.string.subscription_to_tables,
+                    state.tables.joinToString(", ")
+                )
+            },
+            Modifier.weight(1f)
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Icon(
+            painter = painterResource(R.drawable.baseline_chevron_right_24),
+            contentDescription = null
         )
     }
 }
@@ -112,7 +134,7 @@ private fun EventCard(event: Event, onDismiss: () -> Unit) {
                                     stringResource(R.string.event_dish, event.dish)
                                 }
                             )
-                            Text(stringResource(R.string.event_table, event.table))
+                            Text(stringResource(R.string.table, event.table))
                         }
                     }
                 }

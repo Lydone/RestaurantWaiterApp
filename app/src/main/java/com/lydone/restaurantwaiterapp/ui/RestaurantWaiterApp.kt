@@ -13,6 +13,7 @@ import com.lydone.restaurantwaiterapp.R
 import com.lydone.restaurantwaiterapp.ui.main.MainViewModel
 import com.lydone.restaurantwaiterapp.ui.navigation.MAIN_ROUTE
 import com.lydone.restaurantwaiterapp.ui.navigation.RestaurantWaiterNavHost
+import com.lydone.restaurantwaiterapp.ui.navigation.TABLE_PICKER_ROUTE
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,10 +27,21 @@ fun RestaurantWaiterApp() {
                     Text(
                         when (currentRoute) {
                             MAIN_ROUTE -> stringResource(R.string.title_main)
+                            TABLE_PICKER_ROUTE -> stringResource(R.string.title_table_picker)
                             else -> ""
                         }
                     )
-                }
+                },
+                navigationIcon = {
+                    if (currentRoute != MAIN_ROUTE) {
+                        IconButton(onClick = navController::popBackStack) {
+                            Icon(
+                                painterResource(R.drawable.baseline_arrow_back_24),
+                                contentDescription = null
+                            )
+                        }
+                    }
+                },
             )
         },
         floatingActionButton = {

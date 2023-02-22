@@ -5,21 +5,19 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.lydone.restaurantwaiterapp.data.db.model.Event
+import com.lydone.restaurantwaiterapp.data.db.model.Table
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface EventDao {
+interface TableDao {
 
-    @Query("SELECT * FROM event")
-    fun getAll(): Flow<List<Event>>
+    @Query("SELECT * FROM `table`")
+    fun getSelected(): Flow<List<Table>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(events: List<Event>)
+    suspend fun insertAll(vararg tables: Table)
 
     @Delete
-    suspend fun delete(event: Event)
+    suspend fun delete(table: Table)
 
-    @Query("DELETE FROM event")
-    suspend fun deleteAll()
 }
